@@ -1,5 +1,6 @@
 package example.rock.paper.scissors.acceptance
 
+import example.rock.paper.scissors.RPSWeaponGenerator.{Paper, Scissors, Rock}
 import example.rock.paper.scissors._
 import org.scalatest.{FeatureSpec, GivenWhenThen}
 
@@ -20,7 +21,7 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
 
 
       Then("player should beat the computer")
-      val winner: Option[Participant] = RPSGame(player, computer).findWinner()
+      val winner: Option[Participant] = WinnerFinder(player, computer).winner
       assert(winner.isDefined)
       assert(winner.get == player)
     }
@@ -36,7 +37,7 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
 
 
       Then("player should beat the computer")
-      val winner: Option[Participant] = RPSGame(player, computer).findWinner()
+      val winner: Option[Participant] = WinnerFinder(player, computer).winner
       assert(winner.isDefined)
       assert(winner.get == player)
     }
@@ -52,7 +53,7 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
 
 
       Then("computer should beat the player")
-      val winner: Option[Participant] = RPSGame(player, computer).findWinner()
+      val winner: Option[Participant] = WinnerFinder(player, computer).winner
       assert(winner.isDefined)
       assert(winner.get == computer)
     }
@@ -68,7 +69,7 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
 
 
       Then("computer should draw the player")
-      val winner: Option[Participant] = RPSGame(player, computer).findWinner()
+      val winner: Option[Participant] = WinnerFinder(player, computer).winner
       assert(winner.isEmpty)
     }
 
@@ -83,7 +84,7 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
 
 
       Then("computer should draw the player")
-      val winner: Option[Participant] = RPSGame(player, computer).findWinner()
+      val winner: Option[Participant] = WinnerFinder(player, computer).winner
       assert(winner.isEmpty)
     }
 
@@ -99,23 +100,117 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
 
 
       Then("computer should draw the player")
-      val winner: Option[Participant] = RPSGame(player, computer).findWinner()
+      val winner: Option[Participant] = WinnerFinder(player, computer).winner
       assert(winner.isEmpty)
     }
   }
 
   feature("Computer v Computer") {
     scenario("A different game each time") {
-      Given("1 million times two consecutive weapons are generated")
-      val oneMillion = 1000000.0
+      Given("1 thousand times two consecutive weapons are generated")
+      val oneThousand = 1000.0
 
       When("check how often weapon generations are the same ")
-      val sameWeaponInSequenceCount = (1 to oneMillion.toInt).map{
-        _ =>Computer.rpsComputer("computer").weapon == Computer.rpsComputer("computer").weapon
-      }.filter(identity).size
+      val sameWeaponInSequenceCount = (1 to oneThousand.toInt).map {
+        _ => Computer.rpsComputer("computer").weapon == Computer.rpsComputer("computer").weapon
+      }.count(identity)
 
       Then("verify every two consecutive weapon generations are independent, with probability 1/numberOfWeapons each")
-      assert(Math.round(oneMillion / sameWeaponInSequenceCount)  == Computer.rpsComputer("computer").numberOfWeapons)
+      assert(Math.round(oneThousand / sameWeaponInSequenceCount) == Computer.rpsComputer("computer").weaponGenerator.numberOfWeapons)
+    }
+
+    scenario("Rock beats scissors") {
+      Given("Computer one picks rock")
+      val computerOne = Computer.rpsComputer("computerOne", Rock)
+      assert(computerOne.weapon == Rock)
+
+      When("Computer two picks scissors")
+      val computerTwo = Computer.rpsComputer("computer", Scissors)
+      assert(computerTwo.weapon == Scissors)
+
+
+      Then("computer one should beat the computer two")
+      val winner: Option[Participant] = WinnerFinder(computerOne, computerTwo).winner
+      assert(winner.isDefined)
+      assert(winner.get == computerOne)
+    }
+
+    scenario("Scissors beats paper") {
+      Given("Computer one picks scissors")
+      val computerOne = Computer.rpsComputer("computerOne", Scissors)
+      assert(computerOne.weapon == Scissors)
+
+      When("Computer two picks paper")
+      val computerTwo = Computer.rpsComputer("computerTwo", Paper)
+      assert(computerTwo.weapon == Paper)
+
+
+      Then("computer one should beat compuer two")
+      val winner: Option[Participant] = WinnerFinder(computerOne, computerTwo).winner
+      assert(winner.isDefined)
+      assert(winner.get == computerOne)
+    }
+
+    scenario("Paper beats rock") {
+      Given("Computer one picks rock")
+      val computerOne = Computer.rpsComputer("computerOne", Rock)
+      assert(computerOne.weapon == Rock)
+
+      When("Computer two picks paper")
+      val computerTwo = Computer.rpsComputer("computerTwo", Paper)
+      assert(computerTwo.weapon == Paper)
+
+
+      Then("computer two should beat computer one")
+      val winner: Option[Participant] = WinnerFinder(computerOne, computerTwo).winner
+      assert(winner.isDefined)
+      assert(winner.get == computerTwo)
+    }
+
+    scenario("Paper draws paper") {
+      Given("Computer one picks paper")
+      val computerOne = Computer.rpsComputer("computerOne", Paper)
+      assert(computerOne.weapon == Paper)
+
+      When("Computer two picks paper")
+      val computerTwo = Computer.rpsComputer("computerTwo", Paper)
+      assert(computerTwo.weapon == Paper)
+
+
+      Then("computer one should draw computer two")
+      val winner: Option[Participant] = WinnerFinder(computerOne, computerTwo).winner
+      assert(winner.isEmpty)
+    }
+
+    scenario("Rock draws rock") {
+      Given("Computer one picks rock")
+      val computerOne = Computer.rpsComputer("computerOne", Rock)
+      assert(computerOne.weapon == Rock)
+
+      When("Computer two picks rock")
+      val computerTwo = Computer.rpsComputer("computerTwo", Rock)
+      assert(computerTwo.weapon == Rock)
+
+
+      Then("computer one should draw computer two")
+      val winner: Option[Participant] = WinnerFinder(computerOne, computerTwo).winner
+      assert(winner.isEmpty)
+    }
+
+
+    scenario("Scissors draws scissors") {
+      Given("Computer one picks scissors")
+      val computerOne = Computer.rpsComputer("computerOne", Scissors)
+      assert(computerOne.weapon == Scissors)
+
+      When("Computer picks scissors")
+      val computerTwo= Computer.rpsComputer("computerTwo", Scissors)
+      assert(computerTwo.weapon == Scissors)
+
+
+      Then("computer one should draw computer two")
+      val winner: Option[Participant] = WinnerFinder(computerOne, computerTwo).winner
+      assert(winner.isEmpty)
     }
   }
 
