@@ -29,7 +29,7 @@ class RockPaperScissorsGameSpec extends FlatSpec with Matchers {
       val errorStream = new ByteArrayOutputStream()
       val result: Option[Participant] = gameHelper.chooseParticipant("unknownParticipant", "testName", Paper)(withOutput(errorStream))
       result.isDefined should be(false)
-      errorStream.toString should be("Invalid input unknownParticipant, please choose from: player,computer")
+      errorStream.toString should be("\nInvalid input 'unknownParticipant', please choose from (player,computer): ")
     }
 
 
@@ -67,7 +67,7 @@ class RockPaperScissorsGameSpec extends FlatSpec with Matchers {
 
     val errorStream = new ByteArrayOutputStream()
     input.readParticipantType(withOutput(errorStream)) should be (None)
-    errorStream.toString should be("Invalid input unknown, please choose from: player,computer")
+    errorStream.toString should be("\nInvalid input 'unknown', please choose from (player,computer): ")
   }
 
   it should "allow to choose participant name" in {
@@ -87,7 +87,7 @@ class RockPaperScissorsGameSpec extends FlatSpec with Matchers {
 
     val errorStream = new ByteArrayOutputStream()
     input.readParticipantName(withOutput(errorStream)) should be (None)
-    errorStream.toString should be("Participant name should not be empty")
+    errorStream.toString should be("\nParticipant name should not be empty, try again: ")
   }
 
   it should "allow to choose participant weapon" in {
@@ -109,7 +109,7 @@ class RockPaperScissorsGameSpec extends FlatSpec with Matchers {
 
     val errorStream = new ByteArrayOutputStream()
     input.readParticipantWeapon(withOutput(errorStream)) should be (None)
-    errorStream.toString should be("Invalid input unknownWeapon , please choose from: rock,scissors,paper")
+    errorStream.toString should be("\nInvalid input 'unknownWeapon', please choose from (rock,scissors,paper): ")
   }
 
 
