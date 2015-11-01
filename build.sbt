@@ -1,3 +1,5 @@
+import org.scoverage.coveralls.Imports.CoverallsKeys._
+
 lazy val root = (project in file("."))
 
 name := "rock-paper-scissor"
@@ -24,3 +26,6 @@ coverageEnabled := true
 
 fork := true
 
+resolvers += Classpaths.sbtPluginReleases
+
+coverallsToken := Some("O4s2Ji5tf0KoDF52wVfakDmBjJMKjobcK")

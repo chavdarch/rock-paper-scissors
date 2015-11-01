@@ -67,9 +67,12 @@ trait RockPaperScissorsGameHelper {
     val name: String = Util.doUntilSuccess(input.readParticipantName(output))
     output.println(s"Participant name is: $name")
 
-    output.print(s"Choose participant weapon from (${RPSWeaponGenerator.allWeapons.map(_.name).mkString(",")}): ")
-    //only if it si player otherwise generate
-    val weapon: Weapon = Util.doUntilSuccess(input.readParticipantWeapon(output))
+    val weapon = if(participantType == "computer") {
+      RPSWeaponGenerator.randomWeapon
+    }else{
+      output.print(s"Choose participant weapon from (${RPSWeaponGenerator.allWeapons.map(_.name).mkString(",")}): ")
+      Util.doUntilSuccess(input.readParticipantWeapon(output))
+    }
     output.println(s"Participant weapon is: ${weapon.name}")
 
     Util.doUntilSuccess(chooseParticipant(participantType, name, weapon)(output))
@@ -91,15 +94,10 @@ object RockPaperScissorsGame extends App with ConsoleInputOutput with RockPaperS
   val winner = WinnerFinder(firstParticipant, secondParticipant).winner
 
   if (winner.isDefined)
-    println(s"${winner.get.name} is the winner!")
+    println(s"${winner.get.name} is the winner with weapon ${winner.get.weapon.name}!")
   else
-    println(s"The game doesn't have a winner, for ${firstParticipant.name} with weapon ${firstParticipant.weapon} and ${secondParticipant.name} and weapon ${secondParticipant.weapon}!")
+    println(s"The game doesn't have a winner, for ${firstParticipant.name} with weapon ${firstParticipant.weapon.name} and ${secondParticipant.name} with weapon ${secondParticipant.weapon.name}!")
 }
-
-//case class Result(text: String, won: Int, lost: Int, drew: Int) {
-//  override def toString = s"$text. Won: $won, Lost: $lost, Drew: $drew"
-//
-//}
 
 
 
