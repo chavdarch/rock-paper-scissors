@@ -85,18 +85,19 @@ trait ConsoleInputOutput extends Input with Output {
 }
 
 object RockPaperScissorsGame extends App with ConsoleInputOutput with RockPaperScissorsGameHelper {
-  println(s"Choose first participant")
-  val firstParticipant = chooseParticipant(this, this)
+    println(s"Choose first participant")
+    val firstParticipant = chooseParticipant(this, this)
 
-  println(s"Choose second participant")
-  val secondParticipant = chooseParticipant(this, this)
+    println(s"Choose second participant")
+    val secondParticipant = chooseParticipant(this, this)
 
-  val winner = WinnerFinder(firstParticipant, secondParticipant).winner
+    val winner = WinnerFinder(firstParticipant, secondParticipant).winner
 
-  if (winner.isDefined)
-    println(s"${winner.get.name} is the winner with weapon ${winner.get.weapon.name}!")
-  else
-    println(s"The game doesn't have a winner, for ${firstParticipant.name} with weapon ${firstParticipant.weapon.name} and ${secondParticipant.name} with weapon ${secondParticipant.weapon.name}!")
+    if (winner.isDefined)
+      println(s"${winner.get.name} is the winner with weapon ${winner.get.weapon.name}!")
+    else
+      println(s"The game doesn't have a winner, for ${firstParticipant.name} with weapon ${firstParticipant.weapon.name} and ${secondParticipant.name} with weapon ${secondParticipant.weapon.name}!")
+
 }
 
 
