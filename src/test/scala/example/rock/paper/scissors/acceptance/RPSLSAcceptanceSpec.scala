@@ -17,7 +17,7 @@ class RPSLSAcceptanceSpec extends FeatureSpec with GivenWhenThen  {
       assert(player.weapon == Lizard)
 
       When("Computer picks spock")
-      val computer = Computer.rpsComputer("computer", Spock)
+      val computer = Computer("computer", Spock)
       assert(computer.weapon == Spock)
 
 

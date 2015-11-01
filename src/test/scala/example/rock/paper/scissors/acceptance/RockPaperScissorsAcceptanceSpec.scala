@@ -16,7 +16,7 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
       assert(player.weapon == Rock)
 
       When("Computer picks scissors")
-      val computer = Computer.rpsComputer("computer", Scissors)
+      val computer = Computer("computer", Scissors)
       assert(computer.weapon == Scissors)
 
 
@@ -32,7 +32,7 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
       assert(player.weapon == Scissors)
 
       When("Computer picks paper")
-      val computer = Computer.rpsComputer("computer", Paper)
+      val computer = Computer("computer", Paper)
       assert(computer.weapon == Paper)
 
 
@@ -48,7 +48,7 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
       assert(player.weapon == Rock)
 
       When("Computer picks paper")
-      val computer = Computer.rpsComputer("computer", Paper)
+      val computer = Computer("computer", Paper)
       assert(computer.weapon == Paper)
 
 
@@ -64,7 +64,7 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
       assert(player.weapon == Paper)
 
       When("Computer picks paper")
-      val computer = Computer.rpsComputer("computer", Paper)
+      val computer = Computer("computer", Paper)
       assert(computer.weapon == Paper)
 
 
@@ -79,7 +79,7 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
       assert(player.weapon == Rock)
 
       When("Computer picks rock")
-      val computer = Computer.rpsComputer("computer", Rock)
+      val computer = Computer("computer", Rock)
       assert(computer.weapon == Rock)
 
 
@@ -95,7 +95,7 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
       assert(player.weapon == Scissors)
 
       When("Computer picks scissors")
-      val computer = Computer.rpsComputer("computer", Scissors)
+      val computer = Computer("computer", Scissors)
       assert(computer.weapon == Scissors)
 
 
@@ -112,20 +112,20 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
 
       When("check how often weapon generations are the same ")
       val sameWeaponInSequenceCount = (1 to oneThousand.toInt).map {
-        _ => Computer.rpsComputer("computer").weapon == Computer.rpsComputer("computer").weapon
+        _ =>  RPSWeaponGenerator.randomWeapon == RPSWeaponGenerator.randomWeapon
       }.count(identity)
 
       Then("verify every two consecutive weapon generations are independent, with probability 1/numberOfWeapons each")
-      assert(Math.round(oneThousand / sameWeaponInSequenceCount) == Computer.rpsComputer("computer").weaponGenerator.numberOfWeapons)
+      assert(Math.round(oneThousand / sameWeaponInSequenceCount) == RPSWeaponGenerator.allWeapons.size)
     }
 
     scenario("Rock beats scissors") {
       Given("Computer one picks rock")
-      val computerOne = Computer.rpsComputer("computerOne", Rock)
+      val computerOne = Computer("computerOne", Rock)
       assert(computerOne.weapon == Rock)
 
       When("Computer two picks scissors")
-      val computerTwo = Computer.rpsComputer("computer", Scissors)
+      val computerTwo = Computer("computer", Scissors)
       assert(computerTwo.weapon == Scissors)
 
 
@@ -137,11 +137,11 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
 
     scenario("Scissors beats paper") {
       Given("Computer one picks scissors")
-      val computerOne = Computer.rpsComputer("computerOne", Scissors)
+      val computerOne = Computer("computerOne", Scissors)
       assert(computerOne.weapon == Scissors)
 
       When("Computer two picks paper")
-      val computerTwo = Computer.rpsComputer("computerTwo", Paper)
+      val computerTwo = Computer("computerTwo", Paper)
       assert(computerTwo.weapon == Paper)
 
 
@@ -153,11 +153,11 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
 
     scenario("Paper beats rock") {
       Given("Computer one picks rock")
-      val computerOne = Computer.rpsComputer("computerOne", Rock)
+      val computerOne = Computer("computerOne", Rock)
       assert(computerOne.weapon == Rock)
 
       When("Computer two picks paper")
-      val computerTwo = Computer.rpsComputer("computerTwo", Paper)
+      val computerTwo = Computer("computerTwo", Paper)
       assert(computerTwo.weapon == Paper)
 
 
@@ -169,11 +169,11 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
 
     scenario("Paper draws paper") {
       Given("Computer one picks paper")
-      val computerOne = Computer.rpsComputer("computerOne", Paper)
+      val computerOne = Computer("computerOne", Paper)
       assert(computerOne.weapon == Paper)
 
       When("Computer two picks paper")
-      val computerTwo = Computer.rpsComputer("computerTwo", Paper)
+      val computerTwo = Computer("computerTwo", Paper)
       assert(computerTwo.weapon == Paper)
 
 
@@ -184,11 +184,11 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
 
     scenario("Rock draws rock") {
       Given("Computer one picks rock")
-      val computerOne = Computer.rpsComputer("computerOne", Rock)
+      val computerOne = Computer("computerOne", Rock)
       assert(computerOne.weapon == Rock)
 
       When("Computer two picks rock")
-      val computerTwo = Computer.rpsComputer("computerTwo", Rock)
+      val computerTwo = Computer("computerTwo", Rock)
       assert(computerTwo.weapon == Rock)
 
 
@@ -200,11 +200,11 @@ class RockPaperScissorsAcceptanceSpec  extends FeatureSpec with GivenWhenThen {
 
     scenario("Scissors draws scissors") {
       Given("Computer one picks scissors")
-      val computerOne = Computer.rpsComputer("computerOne", Scissors)
+      val computerOne = Computer("computerOne", Scissors)
       assert(computerOne.weapon == Scissors)
 
       When("Computer picks scissors")
-      val computerTwo= Computer.rpsComputer("computerTwo", Scissors)
+      val computerTwo= Computer("computerTwo", Scissors)
       assert(computerTwo.weapon == Scissors)
 
 

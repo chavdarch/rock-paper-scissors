@@ -4,10 +4,11 @@ import java.security.SecureRandom
 
 sealed trait Weapon {
   def beats: Set[Weapon]
+  def name: String
 }
 
 trait WeaponGenerator {
-  def numberOfWeapons: Int
+  def allWeapons: Set[Weapon]
   def randomWeapon: Weapon
 }
 
@@ -16,14 +17,20 @@ object RPSWeaponGenerator extends WeaponGenerator{
 
   case object Rock extends Weapon{
     override val beats: Set[Weapon] = Set(Scissors)
+
+    override val name: String = "rock"
   }
 
   case object Scissors extends Weapon {
     override val beats: Set[Weapon] = Set(Paper)
+
+    override val name: String = "scissors"
   }
 
   case object Paper extends Weapon {
     override val beats: Set[Weapon] = Set(Rock)
+
+    override def name: String = "paper"
   }
 
   private implicit class WeaponConverter(value: Int) {
@@ -36,11 +43,11 @@ object RPSWeaponGenerator extends WeaponGenerator{
   }
 
   def randomWeapon: Weapon = {
-    val randomWeaponNumber = secureRandom.nextInt(numberOfWeapons) + 1
+    val randomWeaponNumber = secureRandom.nextInt(allWeapons.size) + 1
     randomWeaponNumber.toRPSWeapon
   }
 
-  override def numberOfWeapons: Int = 3
+  override val allWeapons: Set[Weapon] = Set(Rock, Scissors, Paper)
 }
 
 
@@ -49,22 +56,27 @@ object RPSLSWeaponGenerator extends WeaponGenerator{
 
   case object Rock extends Weapon{
     override val beats: Set[Weapon] = Set(Lizard, Scissors)
+    override val name: String = "rock"
   }
 
   case object Scissors extends Weapon {
     override val beats: Set[Weapon] = Set(Paper, Lizard)
+    override val name: String = "scissors"
   }
 
   case object Paper extends Weapon {
     override val beats: Set[Weapon] = Set(Rock, Spock)
+    override val name: String = "paper"
   }
 
   case object Lizard extends Weapon {
     override val beats: Set[Weapon] = Set(Spock, Paper)
+    override val name: String = "lizard"
   }
 
   case object Spock extends Weapon {
     override val beats: Set[Weapon] = Set(Scissors, Rock)
+    override def name: String = "spock"
   }
 
   private implicit class WeaponConverter(value: Int) {
@@ -79,9 +91,10 @@ object RPSLSWeaponGenerator extends WeaponGenerator{
   }
 
   def randomWeapon: Weapon = {
-    val randomWeaponNumber = secureRandom.nextInt(numberOfWeapons) + 1
+    val randomWeaponNumber = secureRandom.nextInt(allWeapons.size) + 1
     randomWeaponNumber.toRPSLSWeapon
   }
 
-  override def numberOfWeapons: Int = 5
+  override val allWeapons: Set[Weapon] = Set(Rock, Scissors, Paper, Lizard, Spock)
+
 }
