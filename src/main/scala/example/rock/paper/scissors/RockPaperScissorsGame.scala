@@ -1,15 +1,17 @@
 package example.rock.paper.scissors
 
-import java.io.{Serializable, BufferedReader, PrintStream}
+import java.io.{BufferedReader, PrintStream}
 
 
 trait Output {
   def writer: PrintStream
 
   def print(s: String) = writer.print(s)
+  def println(s: String) = writer.println(s)
+
 }
 
-object Input{
+object Input {
   val validParticipantTypes: Seq[String] = Seq("player", "computer")
 }
 
@@ -21,7 +23,7 @@ trait Input {
   def readParticipantType(errorOutput: Output, validTypes: Seq[String] = Input.validParticipantTypes): Option[String] = read match {
     case x if validTypes.contains(x) => Some(x)
     case invalidInput => {
-      errorOutput.print(s"Invalid input $invalidInput, please choose from: ${validTypes.mkString(",")}")
+      errorOutput.print(s"\nInvalid input '$invalidInput', please choose from (${validTypes.mkString(",")}): ")
       None
     }
   }
@@ -29,7 +31,7 @@ trait Input {
   def readParticipantName(errorOutput: Output): Option[String] = read match {
     case x if !(x == null || x.isEmpty) => Some(x)
     case invalidInput => {
-      errorOutput.print("Participant name should not be empty")
+      errorOutput.print("\nParticipant name should not be empty, try again: ")
       None
     }
   }
@@ -37,7 +39,7 @@ trait Input {
   def readParticipantWeapon(errorOutput: Output, validWeapons: Set[Weapon] = RPSWeaponGenerator.allWeapons): Option[Weapon] = {
     val weapon = read
     validWeapons.find(_.name == weapon).orElse {
-      errorOutput.print(s"Invalid input $weapon , please choose from: ${validWeapons.map(_.name).mkString(",")}")
+      errorOutput.print(s"\nInvalid input '$weapon', please choose from (${validWeapons.map(_.name).mkString(",")}): ")
       None
     }
   }
@@ -50,23 +52,28 @@ trait RockPaperScissorsGameHelper {
     case "player" => Some(Player(name, weapon))
     case "computer" => Some(Computer(name, weapon))
     case invalidInput => {
-      errorOutput.print(s"Invalid input $invalidInput, please choose from: ${Input.validParticipantTypes.mkString(",")}")
+      errorOutput.print(s"\nInvalid input '$invalidInput', please choose from (${Input.validParticipantTypes.mkString(",")}): ")
       None
     }
   }
 
-  //  def chooseUntilValid[T](choice: T, valid: T => Boolean): T = {
-  //    while(!validChoice)
-  //      chooseUntilValid(validChoice)
-  //    chooseParticipant(choice, name,  weapon).fold[Participant] {
-  //      error: String  => {
-  //        Console.out.println(error)
-  //        chooseUntilValid(choice, name, weapon)
-  //        },
-  //         p:Participant => p
-  //    }
-  //  }
-  //}
+  def chooseParticipant(input: Input, output: Output): Participant = {
+    output.print(s"Choose participant from (${Input.validParticipantTypes.mkString(",")}): ")
+    val participantType: String = Util.doUntilSuccess(input.readParticipantType(output))
+    output.println(s"Participant type is: $participantType")
+
+
+    output.print(s"Choose participant name: ")
+    val name: String = Util.doUntilSuccess(input.readParticipantName(output))
+    output.println(s"Participant name is: $name")
+
+    output.print(s"Choose participant weapon from (${RPSWeaponGenerator.allWeapons.map(_.name).mkString(",")}): ")
+    //only if it si player otherwise generate
+    val weapon: Weapon = Util.doUntilSuccess(input.readParticipantWeapon(output))
+    output.println(s"Participant weapon is: ${weapon.name}")
+
+    Util.doUntilSuccess(chooseParticipant(participantType, name, weapon)(output))
+  }
 }
 
 trait ConsoleInputOutput extends Input with Output {
@@ -74,32 +81,19 @@ trait ConsoleInputOutput extends Input with Output {
   override val writer: PrintStream = Console.out
 }
 
-object RockPaperScissorsGame extends App with ConsoleInputOutput {
-  //  def chooseParticipant(choice: Choice, name: String, weapon: Weapon): Either[String, Participant] = choice match {
-  //    case PlayerChoice => Right(Player(name, weapon))
-  //    case ComputerChoice => Right(Computer(name, weapon))
-  //    case _ => Left(s"unknown choice $choice,  please choose player or computer")
-  //  }
+object RockPaperScissorsGame extends App with ConsoleInputOutput with RockPaperScissorsGameHelper {
+  println(s"Choose first participant")
+  val firstParticipant = chooseParticipant(this, this)
 
-  print(s" Choose first participant from: ${Input.validParticipantTypes.mkString(",")} ")
-  val participantType: String = Util.doUntilSuccess(readParticipantType(this))
-  println(s"\nfirst participant type is: $participantType")
+  println(s"Choose second participant")
+  val secondParticipant = chooseParticipant(this, this)
 
+  val winner = WinnerFinder(firstParticipant, secondParticipant).winner
 
-  print(s" Choose first participant name:")
-  val name: String = Util.doUntilSuccess(readParticipantName(this))
-  println(s"\nfirst participant name is: $name")
-
-  print(s" Choose first participant weapon from: ${RPSWeaponGenerator.allWeapons.mkString(",")}")
-  //only if it si player otherwise generate
-  val weapon: String = Console.in.readLine()
-  println(s"\nfirst participant weapon is: $name")
-
-  //....
-  //
-  //  ///do the same for teh other player and then print the result
-  //
-  //  Console.withOut()
+  if (winner.isDefined)
+    println(s"${winner.get.name} is the winner!")
+  else
+    println(s"The game doesn't have a winner, for ${firstParticipant.name} with weapon ${firstParticipant.weapon} and ${secondParticipant.name} and weapon ${secondParticipant.weapon}!")
 }
 
 //case class Result(text: String, won: Int, lost: Int, drew: Int) {
