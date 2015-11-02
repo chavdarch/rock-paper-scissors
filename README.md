@@ -2,7 +2,7 @@
 Rock paper scissors game implementation
 
 This is game between two players with ability to chose player type(human, computer) and name.
-Computer generates weapon randomly using secure random generation.
+Computer generates weapon randomly using secure random generation, which requires sudo access on the machine running the project
 
 Game can be easily extended for more weapons( `rock-paper-scissors-lizard-Spock` example provided in the code)
 
