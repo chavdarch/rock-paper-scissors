@@ -29,16 +29,16 @@ class RPSLSAcceptanceSpec extends FeatureSpec with GivenWhenThen  {
   }
   feature("Computer v Computer") {
     scenario("A different game each time") {
-      Given("1 thousand times two consecutive weapons are generated")
-      val oneThousand = 1000.0
+      Given("10 thousands times two consecutive weapons are generated")
+      val tenThousands = 10000.0
 
       When("check how often weapon generations are the same ")
-      val sameWeaponInSequenceCount = (1 to oneThousand.toInt).map {
+      val sameWeaponInSequenceCount = (1 to tenThousands.toInt).map {
         _ => RPSLSWeaponGenerator.randomWeapon == RPSLSWeaponGenerator.randomWeapon
       }.count(identity)
 
       Then("verify every two consecutive weapon generations are independent, with probability 1/numberOfWeapons each")
-      assert(Math.round(oneThousand / sameWeaponInSequenceCount) == RPSLSWeaponGenerator.allWeapons.size)
+      assert(Math.round(tenThousands / sameWeaponInSequenceCount) == RPSLSWeaponGenerator.allWeapons.size)
     }
   }
 }

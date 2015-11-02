@@ -34,7 +34,7 @@ class RockPaperScissorsGameDriver(val input: Input, val output: Output) {
     }
   }
 
-  def chooseParticipant(): Participant = {
+  def requestParticipantChoice(): Participant = {
     output.print(s"Choose participant from (${Input.validParticipantTypes.mkString(",")}): ")
     val participantType: String = Util.doUntilSuccess(readParticipantType())
     output.println(s"Participant type is: $participantType")
@@ -60,7 +60,7 @@ class RockPaperScissorsGameDriver(val input: Input, val output: Output) {
   }
 
   def printDraw(firstParticipant: Participant, secondParticipant: Participant): String = {
-    s"The game doesn't have a winner, for ${firstParticipant.name} with weapon ${firstParticipant.weapon.name} and ${secondParticipant.name} with weapon ${secondParticipant.weapon.name}!"
+    s"The game doesn't have a winner for ${firstParticipant.name} with weapon ${firstParticipant.weapon.name} and ${secondParticipant.name} with weapon ${secondParticipant.weapon.name}!"
   }
 
   /**
@@ -78,10 +78,10 @@ class RockPaperScissorsGameDriver(val input: Input, val output: Output) {
 object RockPaperScissorsGame extends App with ConsoleInputOutput {
   val driver =  new RockPaperScissorsGameDriver(this, this)
   println(s"Choose first participant")
-  val firstParticipant = driver.chooseParticipant()
+  val firstParticipant = driver.requestParticipantChoice()
 
   println(s"Choose second participant")
-  val secondParticipant = driver.chooseParticipant()
+  val secondParticipant = driver.requestParticipantChoice()
 
   println(driver.gameResult(firstParticipant, secondParticipant))
 }
