@@ -22,8 +22,8 @@ You can also run the project by executing bin/start.sh script from any directory
 ## How to run test & check code coverage
   `sbt clean coverage test`
 ## Continuous integration and code coverage tools
-   travis build - https://travis-ci.org/chavdarch/rock-paper-scissors
-   coveralls - https://coveralls.io/github/chavdarch/rock-paper-scissors 
+   * travis build - https://travis-ci.org/chavdarch/rock-paper-scissors
+   * coveralls - https://coveralls.io/github/chavdarch/rock-paper-scissors
   
 ## Sample output
 
