@@ -20,7 +20,7 @@ You can also run the project by executing bin/start.sh script from any directory
  Create a new branch do your changes there and submit pull request.
  Make sure travis build is succesfull and code coverage is at least 80%
 ## How to run test & check code coverage
-  sbt clean coverage test
+  `sbt clean coverage test`
 ## Continuous integration and code coverage tools
    travis build - https://travis-ci.org/chavdarch/rock-paper-scissors
    coveralls - https://coveralls.io/github/chavdarch/rock-paper-scissors 
